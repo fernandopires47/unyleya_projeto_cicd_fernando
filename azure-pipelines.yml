@@ -6,17 +6,19 @@ pool:
 
 variables:
   ImageName: 'eopires/projects:unyleya-project-$(Build.BuildId)'
+  dockerRegistryServiceConnection: 'dockerconnection'
 
 stages:
 - stage: Build
   displayName: CI Docker
   jobs:  
+
   - job: Build
     displayName: Build and push Docker image
     steps:
     - task: Docker@1      
       inputs:
-        containerregistrytype: 'Container Registry'
+        containerRegistry: $(dockerRegistryServiceConnection)
         dockerRegistryEndpoint: 'Docker Hub'
         command: 'Build an image'
         dockerFile: './Dockerfile'
@@ -27,7 +29,7 @@ stages:
 
     - task: Docker@1      
       inputs:
-        containerregistrytype: 'Container Registry'
+        containerRegistry: $(dockerRegistryServiceConnection)
         dockerRegistryEndpoint: 'Docker Hub'
         command: 'Push an image'
         imageName: '$(ImageName)'
